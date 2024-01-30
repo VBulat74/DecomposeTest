@@ -1,23 +1,26 @@
 package ru.com.vbulat.decomposetest.presentation
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import com.arkivanov.decompose.ComponentContext
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import ru.com.vbulat.decomposetest.core.componentScope
 import ru.com.vbulat.decomposetest.data.RepositoryImpl
 import ru.com.vbulat.decomposetest.domain.Contact
 import ru.com.vbulat.decomposetest.domain.GetContactsUseCase
 
-class DefaultContactListComponent (
+class DefaultContactListComponent(
+    componentContext : ComponentContext,
     val onEditingContactRequested : (Contact) -> Unit,
     val onAddContactRequested : () -> Unit,
-) : ContactListComponent {
+) : ContactListComponent, ComponentContext by componentContext {
+
+    // private val viewmodel = instanceKeeper.getOrCreate { FareViewModel() }
 
     private val repository = RepositoryImpl
     private val getContactsUseCase = GetContactsUseCase(repository)
-    private val coroutineScope = CoroutineScope(Dispatchers.Main.immediate)
+    private val coroutineScope = componentScope()
 
     override val model : StateFlow<ContactListComponent.Model> = getContactsUseCase()
         .map { contactList ->
@@ -37,3 +40,10 @@ class DefaultContactListComponent (
         onAddContactRequested()
     }
 }
+
+//private class FareViewModel() : InstanceKeeper.Instance {
+//
+//    override fun onDestroy() {
+//        super.onDestroy()
+//    }
+//}

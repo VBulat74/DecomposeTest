@@ -1,5 +1,7 @@
 package ru.com.vbulat.decomposetest.presentation
 
+import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.essenty.statekeeper.consume
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -8,13 +10,23 @@ import ru.com.vbulat.decomposetest.domain.Contact
 import ru.com.vbulat.decomposetest.domain.EditContactUseCase
 
 class DefaultEditContactComponent (
+    componentContext : ComponentContext,
     private val contact : Contact
-) : EditContactComponent {
+) : EditContactComponent, ComponentContext by componentContext {
     private val repository = RepositoryImpl
     private val editContactUseCase = EditContactUseCase(repository)
 
+    init {
+        stateKeeper.register(KEY) {
+            model.value
+        }
+    }
+
     private val _model = MutableStateFlow(
-        EditContactComponent.Model(username = contact.username, phone = contact.phone)
+        stateKeeper.consume(KEY) ?: EditContactComponent.Model(
+            username = contact.username,
+            phone = contact.phone
+        )
     )
 
     override val model : StateFlow<EditContactComponent.Model>
@@ -36,5 +48,9 @@ class DefaultEditContactComponent (
                 phone = phone
             )
         )
+    }
+
+    companion object{
+        private const val KEY = "DefaultEditContactComponent"
     }
 }
