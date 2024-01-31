@@ -25,14 +25,15 @@ fun RootContent(
 
             ) {
                 when(val instance = it.instance){
-                    is ContactListComponent ->{
-                        Contacts(component = instance)
+
+                    is DefaultRootComponent.Child.AddContact -> {
+                        AddContact(component = instance.component)
                     }
-                    is AddContactComponent ->{
-                        AddContact(component = instance)
+                    is DefaultRootComponent.Child.ContactList -> {
+                        Contacts(component = instance.component)
                     }
-                    is EditContactComponent -> {
-                        EditContact(component = instance)
+                    is DefaultRootComponent.Child.EditContact -> {
+                        EditContact(component = instance.component)
                     }
                 }
             }

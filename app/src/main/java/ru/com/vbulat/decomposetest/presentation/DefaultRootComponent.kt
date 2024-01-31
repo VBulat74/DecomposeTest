@@ -11,18 +11,18 @@ import com.arkivanov.decompose.value.Value
 import kotlinx.parcelize.Parcelize
 import ru.com.vbulat.decomposetest.domain.Contact
 
-class DefaultRootComponent (
+class DefaultRootComponent(
     componentContext : ComponentContext
 ) : RootComponent, ComponentContext by componentContext {
 
     private val navigation = StackNavigation<Config>()
 
-    val stack : Value <ChildStack<Config, ComponentContext>> = childStack(
+    val stack : Value<ChildStack<Config, Child>> = childStack(
         source = navigation,
         initialConfiguration = Config.ContactList,
         handleBackButton = true,
         //childFactory = :: child
-        childFactory = {configuration: Config, componentContext: ComponentContext ->
+        childFactory = { configuration : Config, componentContext : ComponentContext ->
             child(
                 componentContext = componentContext,
                 config = configuration,
@@ -33,19 +33,21 @@ class DefaultRootComponent (
     private fun child(
         config : Config,
         componentContext : ComponentContext,
-    ) : ComponentContext {
+    ) : Child {
 
         return when (config) {
             Config.AddContact -> {
-                DefaultAddContactComponent(
+                val component = DefaultAddContactComponent(
                     componentContext = componentContext,
                     onContactSaved = {
                         navigation.pop()
                     },
                 )
+                Child.AddContact(component)
             }
+
             Config.ContactList -> {
-                DefaultContactListComponent(
+                val component = DefaultContactListComponent(
                     componentContext = componentContext,
                     onEditingContactRequested = {
                         navigation.push(Config.EditContact(contact = it))
@@ -54,17 +56,30 @@ class DefaultRootComponent (
                         navigation.push(Config.AddContact)
                     },
                 )
+                Child.ContactList(component)
             }
+
             is Config.EditContact -> {
-                DefaultEditContactComponent(
+                val component = DefaultEditContactComponent(
                     componentContext = componentContext,
                     config.contact,
                     onContactSaved = {
                         navigation.pop()
                     },
                 )
+                Child.EditContact(component)
             }
         }
+
+    }
+
+    sealed interface Child {
+
+        class AddContact(val component : AddContactComponent) : Child
+
+        class EditContact(val component : EditContactComponent) : Child
+
+        class ContactList(val component : ContactListComponent) : Child
 
     }
 
@@ -77,6 +92,6 @@ class DefaultRootComponent (
         object AddContact : Config
 
         @Parcelize
-        data class EditContact (val contact : Contact) : Config
+        data class EditContact(val contact : Contact) : Config
     }
 }
