@@ -5,13 +5,9 @@ import ru.com.vbulat.decomposetest.domain.Contact
 
 interface ContactListComponent {
 
-    val model : StateFlow<Model>
+    val model : StateFlow<ContactListStore.State>
 
     fun onContactClicked(contact : Contact)
 
     fun onAddContactClicked()
-
-    data class Model(
-        val contactList : List<Contact>
-    )
 }
