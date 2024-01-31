@@ -2,9 +2,12 @@ package ru.com.vbulat.decomposetest.presentation
 
 import android.os.Parcelable
 import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
+import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.push
+import com.arkivanov.decompose.value.Value
 import kotlinx.parcelize.Parcelize
 import ru.com.vbulat.decomposetest.domain.Contact
 
@@ -12,11 +15,24 @@ class DefaultRootComponent (
     componentContext : ComponentContext
 ) : RootComponent, ComponentContext by componentContext {
 
-    val navigation = StackNavigation<Config>()
+    private val navigation = StackNavigation<Config>()
 
-    fun child(
+    val stack : Value <ChildStack<Config, ComponentContext>> = childStack(
+        source = navigation,
+        initialConfiguration = Config.ContactList,
+        handleBackButton = true,
+        //childFactory = :: child
+        childFactory = {configuration: Config, componentContext: ComponentContext ->
+            child(
+                componentContext = componentContext,
+                config = configuration,
+            )
+        }
+    )
+
+    private fun child(
+        config : Config,
         componentContext : ComponentContext,
-        config : Config
     ) : ComponentContext {
 
         return when (config) {
