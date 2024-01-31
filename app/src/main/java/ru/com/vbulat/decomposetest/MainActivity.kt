@@ -10,8 +10,8 @@ import ru.com.vbulat.decomposetest.ui.contenet.RootContent
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState : Bundle?) {
         super.onCreate(savedInstanceState)
+        val componentContext = defaultComponentContext()
         setContent {
-            val componentContext = defaultComponentContext()
             RootContent(component = DefaultRootComponent(componentContext))
         }
     }
