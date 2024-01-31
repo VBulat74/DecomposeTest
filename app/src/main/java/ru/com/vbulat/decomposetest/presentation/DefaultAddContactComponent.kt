@@ -8,15 +8,18 @@ import kotlinx.coroutines.flow.asStateFlow
 import ru.com.vbulat.decomposetest.data.RepositoryImpl
 import ru.com.vbulat.decomposetest.domain.AddContactUseCase
 
-class DefaultAddContactComponent (
-    componentContext : ComponentContext
+class DefaultAddContactComponent(
+    componentContext : ComponentContext,
+    private val onContactSaved : () -> Unit,
 ) : AddContactComponent, ComponentContext by componentContext {
 
     private val repository = RepositoryImpl
     private val addContactUseCase = AddContactUseCase(repository)
 
     init {
-        stateKeeper.register(KEY) {
+        stateKeeper.register<AddContactComponent.Model>(
+            key = KEY
+        ) {
             model.value
         }
     }
@@ -42,9 +45,10 @@ class DefaultAddContactComponent (
             username = username,
             phone = phone
         )
+        onContactSaved()
     }
 
-    companion object{
+    companion object {
         private const val KEY = "DefaultAddContactComponent"
     }
 }

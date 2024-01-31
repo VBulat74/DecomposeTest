@@ -11,7 +11,8 @@ import ru.com.vbulat.decomposetest.domain.EditContactUseCase
 
 class DefaultEditContactComponent (
     componentContext : ComponentContext,
-    private val contact : Contact
+    private val contact : Contact,
+    private val onContactSaved : () -> Unit,
 ) : EditContactComponent, ComponentContext by componentContext {
     private val repository = RepositoryImpl
     private val editContactUseCase = EditContactUseCase(repository)
@@ -48,6 +49,7 @@ class DefaultEditContactComponent (
                 phone = phone
             )
         )
+        onContactSaved()
     }
 
     companion object{
