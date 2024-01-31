@@ -5,10 +5,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.extensions.compose.jetpack.stack.Children
-import ru.com.vbulat.decomposetest.presentation.AddContactComponent
-import ru.com.vbulat.decomposetest.presentation.ContactListComponent
 import ru.com.vbulat.decomposetest.presentation.DefaultRootComponent
-import ru.com.vbulat.decomposetest.presentation.EditContactComponent
+import ru.com.vbulat.decomposetest.presentation.RootComponent
 import ru.com.vbulat.decomposetest.ui.theme.DecomposeTestTheme
 
 @Composable
@@ -26,13 +24,13 @@ fun RootContent(
             ) {
                 when(val instance = it.instance){
 
-                    is DefaultRootComponent.Child.AddContact -> {
+                    is RootComponent.Child.AddContact -> {
                         AddContact(component = instance.component)
                     }
-                    is DefaultRootComponent.Child.ContactList -> {
+                    is RootComponent.Child.ContactList -> {
                         Contacts(component = instance.component)
                     }
-                    is DefaultRootComponent.Child.EditContact -> {
+                    is RootComponent.Child.EditContact -> {
                         EditContact(component = instance.component)
                     }
                 }
