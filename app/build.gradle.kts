@@ -59,6 +59,10 @@ dependencies {
     implementation("com.arkivanov.decompose:decompose:2.2.2")
     implementation("com.arkivanov.decompose:extensions-compose-jetpack:2.2.2")
 
+    implementation ("com.arkivanov.mvikotlin:mvikotlin:3.2.1")
+    implementation ("com.arkivanov.mvikotlin:mvikotlin-main:3.2.1")
+    implementation ("com.arkivanov.mvikotlin:mvikotlin-extensions-coroutines:3.2.1")
+
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     implementation("androidx.activity:activity-compose:1.8.2")
