@@ -1,18 +1,23 @@
 package ru.com.vbulat.decomposetest.presentation
 
+import android.util.Log
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
+import com.arkivanov.mvikotlin.logging.store.LoggingStoreFactory
+import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
 import kotlinx.coroutines.launch
+import ru.com.vbulat.decomposetest.data.RepositoryImpl
 import ru.com.vbulat.decomposetest.domain.Contact
 import ru.com.vbulat.decomposetest.domain.GetContactsUseCase
 
-class ContactListStoreFactory(
-    private val storeFactory : StoreFactory,
-    private val getContactsUseCase : GetContactsUseCase,
-) {
+class ContactListStoreFactory{
+
+    private val storeFactory : StoreFactory = LoggingStoreFactory (DefaultStoreFactory())
+    private val repository = RepositoryImpl
+    private val getContactsUseCase : GetContactsUseCase = GetContactsUseCase(repository)
 
     fun create() : ContactListStore = object : ContactListStore,
         Store<ContactListStore.Intent, ContactListStore.State, ContactListStore.Label> by
@@ -22,7 +27,9 @@ class ContactListStoreFactory(
             bootstrapper = BootstrapperImpl(),
             reducer = ReducerImpl,
             executorFactory = ::ExecutorImpl
-        ) {}
+        ) {}.apply {
+        Log.d("AAA", "CREATE ContactListStore")
+    }
 
     private sealed interface Action {
         data class ContactsLoaded(val contacts : List<Contact>) : Action

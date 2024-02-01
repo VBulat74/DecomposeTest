@@ -1,16 +1,20 @@
 package ru.com.vbulat.decomposetest.presentation
 
+import android.util.Log
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
+import com.arkivanov.mvikotlin.logging.store.LoggingStoreFactory
+import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
+import ru.com.vbulat.decomposetest.data.RepositoryImpl
 import ru.com.vbulat.decomposetest.domain.AddContactUseCase
 
-class AddContactStoreFactory(
-    private val storeFactory : StoreFactory,
-    private val addContactUseCase : AddContactUseCase,
+class AddContactStoreFactory {
 
-) {
+    private val storeFactory : StoreFactory = LoggingStoreFactory(DefaultStoreFactory())
+    private val repository = RepositoryImpl
+    private val addContactUseCase : AddContactUseCase = AddContactUseCase(repository)
 
     private val store : Store<AddContactStore.Intent, AddContactStore.State, AddContactStore.Label> =
         storeFactory.create(
@@ -21,7 +25,9 @@ class AddContactStoreFactory(
         )
 
     fun create () : AddContactStore = object : AddContactStore,
-        Store<AddContactStore.Intent, AddContactStore.State, AddContactStore.Label> by store {}
+        Store<AddContactStore.Intent, AddContactStore.State, AddContactStore.Label> by store {}.apply {
+            Log.d("AAA", "CREATE AddContactStore")
+    }
 
     private sealed interface Action
 

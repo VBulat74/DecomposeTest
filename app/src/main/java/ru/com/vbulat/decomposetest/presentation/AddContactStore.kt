@@ -2,7 +2,8 @@ package ru.com.vbulat.decomposetest.presentation
 
 import com.arkivanov.mvikotlin.core.store.Store
 
-interface AddContactStore : Store<AddContactStore.Intent, AddContactStore.State, AddContactStore.Label> {
+interface AddContactStore : Store<AddContactStore.Intent,
+        AddContactStore.State, AddContactStore.Label> {
 
     data class State (
         val username : String,

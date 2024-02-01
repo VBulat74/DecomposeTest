@@ -1,6 +1,7 @@
 package ru.com.vbulat.decomposetest.presentation
 
 import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -15,7 +16,12 @@ class DefaultEditContactComponent (
     private val onContactSaved : () -> Unit,
 ) : EditContactComponent, ComponentContext by componentContext {
 
-    private lateinit var store : EditContactStore
+
+    private var store : EditContactStore = instanceKeeper.getStore {
+        val storeFactory = EditContactStoreFactory()
+        storeFactory.create(contact)
+    }
+
 
     init {
         componentScope().launch {

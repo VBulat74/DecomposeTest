@@ -61,6 +61,7 @@ dependencies {
 
     implementation ("com.arkivanov.mvikotlin:mvikotlin:3.2.1")
     implementation ("com.arkivanov.mvikotlin:mvikotlin-main:3.2.1")
+    implementation ("com.arkivanov.mvikotlin:mvikotlin-logging:3.2.1")
     implementation ("com.arkivanov.mvikotlin:mvikotlin-extensions-coroutines:3.2.1")
 
     implementation("androidx.core:core-ktx:1.12.0")
